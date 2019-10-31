@@ -89,5 +89,12 @@ do-what-it-says
 
      * Edit the text in random.txt to test out the feature for movie-this and concert-this.
 
+
+## Video
+
+Below is a link to a screen recording of the app working:
+
+[Screen Recording](Liri-bot-recording.mov)
+
 ## Author
 * **JC Lenz** 
