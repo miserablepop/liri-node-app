@@ -113,7 +113,7 @@ var movieThis = function(movie){
             
             var ratings = response.data.Ratings;
             for (i in ratings){
-                // console.log(ratings[i].Source);
+                
                 if(ratings[i].Source === 'Rotten Tomatoes'){
                     var rotten = ratings[i]['Value'];
                 }
@@ -125,6 +125,9 @@ var movieThis = function(movie){
             console.log('IMDB Rating: ' + response.data.imdbRating);
             console.log('Rotten Tomatoes Score: ' + rotten);
             console.log('Country: ' + response.data.Country);
+            console.log('Language: ' + response.data.Language);
+            console.log('Movie Plot: ' + response.data.Plot);
+            console.log('Actors: ' + response.data.Actors);
 
         }).catch(function(error){
             if (error.response){
