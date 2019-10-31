@@ -226,16 +226,20 @@ var movieThis = function(movie){
     }
 }
 
+// Function to read random.txt and perform search based off text
 var doWhatItSays = function(){
+
     fs.readFile('random.txt', 'utf8', function(error, data){
 
         if(error){
             return console.log(error);
         }
 
+        // Store random.txt data to variable
         var txt = data.split(',');
-        console.log(txt);
+        // console.log(txt);
 
+       // If statement to determine which function to run
        if(txt[0] === 'spotify-this-song'){
            spotifyThis(txt[1]);
        } else if (txt[0] === 'concert-this'){
@@ -246,6 +250,7 @@ var doWhatItSays = function(){
     })
 }
 
+// Switch statement to run function based off user command
 
 switch (command){
     case 'concert-this':
