@@ -110,8 +110,21 @@ var movieThis = function(movie){
     var movie = encodeURI(movie);
     axios.get('https://www.omdbapi.com/?t=' + movie + '&y=&plot=short&apikey=trilogy').then(
         function(response){
+            
+            var ratings = response.data.Ratings;
+            for (i in ratings){
+                // console.log(ratings[i].Source);
+                if(ratings[i].Source === 'Rotten Tomatoes'){
+                    var rotten = ratings[i]['Value'];
+                }
+            }
+            
             console.log('---------------------------');
             console.log('Title: ' + response.data.Title);
+            console.log('Year: ' + response.data.Year);
+            console.log('IMDB Rating: ' + response.data.imdbRating);
+            console.log('Rotten Tomatoes Score: ' + rotten);
+            console.log('Country: ' + response.data.Country);
 
         }).catch(function(error){
             if (error.response){
