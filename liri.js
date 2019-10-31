@@ -15,6 +15,9 @@ var spotify = new Spotify(keys.spotify);
 // Include the axios npm package
 var axios = require('axios');
 
+// Include the fs package
+var fs = require("fs");
+
 // Include the moment npm package
 var moment = require('moment');
 
@@ -33,6 +36,8 @@ var i, j;
 
 // Concert-this function
 var concertThis = function(artist){
+
+    var artist = encodeURI(artist);
 
     // Axios to call for BandsInTown response
     axios.get('https://rest.bandsintown.com/artists/' + artist + '/events?app_id=codingbootcamp').then(
@@ -130,49 +135,115 @@ var spotifyThis = function(song){
 // Movie-this function
 var movieThis = function(movie){
 
-    //URLEncode the string
-    var movie = encodeURI(movie);
+    
+    if (movie == null){
+        // Axios to call the OMDB API 
+        axios.get('https://www.omdbapi.com/?t=mr%20nobody&y=&plot=short&apikey=trilogy').then(
+            function(response){
+                // console.log(response);
+                // Variable for ratings array 
+                var ratings = response.data.Ratings;
 
-    // Axios to call the OMDB API 
-    axios.get('https://www.omdbapi.com/?t=' + movie + '&y=&plot=short&apikey=trilogy').then(
-        function(response){
-            
-            // Variable for ratings array 
-            var ratings = response.data.Ratings;
-
-            // For loop to extract the Rotten Tomatoes score
-            for (i in ratings){
-                
-                if(ratings[i].Source === 'Rotten Tomatoes'){
-                    var rotten = ratings[i]['Value'];
+                // For loop to extract the Rotten Tomatoes score
+                for (i in ratings){
+                    
+                    if(ratings[i].Source === 'Rotten Tomatoes'){
+                        var rotten = ratings[i]['Value'];
+                    }
                 }
-            }
-            
-            console.log('---------------------------');
-            console.log('Title: ' + response.data.Title);
-            console.log('Year: ' + response.data.Year);
-            console.log('IMDB Rating: ' + response.data.imdbRating);
-            console.log('Rotten Tomatoes Score: ' + rotten);
-            console.log('Country: ' + response.data.Country);
-            console.log('Language: ' + response.data.Language);
-            console.log('Movie Plot: ' + response.data.Plot);
-            console.log('Actors: ' + response.data.Actors);
+                
+                console.log('---------------------------');
+                console.log('Title: ' + response.data.Title);
+                console.log('Year: ' + response.data.Year);
+                console.log('IMDB Rating: ' + response.data.imdbRating);
+                console.log('Rotten Tomatoes Score: ' + rotten);
+                console.log('Country: ' + response.data.Country);
+                console.log('Language: ' + response.data.Language);
+                console.log('Movie Plot: ' + response.data.Plot);
+                console.log('Actors: ' + response.data.Actors);
 
-        }).catch(function(error){
-            if (error.response){
-                console.log("---------------Data---------------");
-                console.log(error.response.data);
-                console.log("---------------Status---------------");
-                console.log(error.response.status);
-                console.log("---------------Status---------------");
-                console.log(error.response.headers);
-            } else if (error.request) {
-                console.log(error.request);
-            } else {
-                console.log('Error', error.message);
-            }
-            console.log(error.config);
-    });
+            }).catch(function(error){
+                if (error.response){
+                    console.log("---------------Data---------------");
+                    console.log(error.response.data);
+                    console.log("---------------Status---------------");
+                    console.log(error.response.status);
+                    console.log("---------------Status---------------");
+                    console.log(error.response.headers);
+                } else if (error.request) {
+                    console.log(error.request);
+                } else {
+                    console.log('Error', error.message);
+                }
+                console.log(error.config);
+        });
+
+    } else {
+
+        //URLEncode the string
+        var movie = encodeURI(movie);
+
+        // Axios to call the OMDB API 
+        axios.get('https://www.omdbapi.com/?t=' + movie + '&y=&plot=short&apikey=trilogy').then(
+            function(response){
+                
+                // Variable for ratings array 
+                var ratings = response.data.Ratings;
+
+                // For loop to extract the Rotten Tomatoes score
+                for (i in ratings){
+                    
+                    if(ratings[i].Source === 'Rotten Tomatoes'){
+                        var rotten = ratings[i]['Value'];
+                    }
+                }
+                
+                console.log('---------------------------');
+                console.log('Title: ' + response.data.Title);
+                console.log('Year: ' + response.data.Year);
+                console.log('IMDB Rating: ' + response.data.imdbRating);
+                console.log('Rotten Tomatoes Score: ' + rotten);
+                console.log('Country: ' + response.data.Country);
+                console.log('Language: ' + response.data.Language);
+                console.log('Movie Plot: ' + response.data.Plot);
+                console.log('Actors: ' + response.data.Actors);
+
+            }).catch(function(error){
+                if (error.response){
+                    console.log("---------------Data---------------");
+                    console.log(error.response.data);
+                    console.log("---------------Status---------------");
+                    console.log(error.response.status);
+                    console.log("---------------Status---------------");
+                    console.log(error.response.headers);
+                } else if (error.request) {
+                    console.log(error.request);
+                } else {
+                    console.log('Error', error.message);
+                }
+                console.log(error.config);
+        });
+    }
+}
+
+var doWhatItSays = function(){
+    fs.readFile('random.txt', 'utf8', function(error, data){
+
+        if(error){
+            return console.log(error);
+        }
+
+        var txt = data.split(',');
+        console.log(txt);
+
+       if(txt[0] === 'spotify-this-song'){
+           spotifyThis(txt[1]);
+       } else if (txt[0] === 'concert-this'){
+           concertThis(txt[1]);
+       } else if (txt[0] === 'movie-this'){
+           movieThis(txt[1]);
+       }
+    })
 }
 
 
@@ -185,5 +256,8 @@ switch (command){
         break;
     case 'movie-this':
         movieThis(searchValue);
+        break;
+    case 'do-what-it-says':
+        doWhatItSays();
         break;
 }
