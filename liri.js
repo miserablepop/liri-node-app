@@ -1,5 +1,8 @@
 require("dotenv").config();
 
+// VARIABLES
+//////////////////////////////////////////////////////////////
+
 // Importing Spotify keys
 var keys = require('./keys.js');
 
@@ -15,17 +18,28 @@ var axios = require('axios');
 // Include the moment npm package
 var moment = require('moment');
 
+// Varibales for command line arugments
 var command = process.argv[2];
 var searchValue = process.argv[3];
-// var defautSong = 'The Sign';
 
+// Loop variables
 var i, j;
-var concerts;
 
+
+
+//FUNCTIONS
+///////////////////////////////////////////////////////////////////////
+
+
+// Concert-this function
 var concertThis = function(artist){
+
+    // Axios to call for BandsInTown response
     axios.get('https://rest.bandsintown.com/artists/' + artist + '/events?app_id=codingbootcamp').then(
         function(response){
             // console.log(response.data);
+
+            // For loop to iterate through response
 
             for(i in response.data){
                 var concertDate = response.data[i].datetime;
@@ -53,9 +67,14 @@ var concertThis = function(artist){
     });
 }
 
+
+// Spotify-this-song function
 var spotifyThis = function(song){
 
+    // If statement to see if user passes song name
     if(song == null){   
+
+        // If no song then search for the Sign as default
         spotify.search({ type: 'track', query: 'The Sign'}, function(err, data) {
             if (err) {
               return console.log('Error occurred: ' + err);
@@ -80,6 +99,8 @@ var spotifyThis = function(song){
         });
 
     } else {
+
+        // Search for song user enters
         spotify.search({ type: 'track', query: song,}, function(err, data) {
             if (err) {
               return console.log('Error occurred: ' + err);
@@ -106,12 +127,20 @@ var spotifyThis = function(song){
 
 }
 
+// Movie-this function
 var movieThis = function(movie){
+
+    //URLEncode the string
     var movie = encodeURI(movie);
+
+    // Axios to call the OMDB API 
     axios.get('https://www.omdbapi.com/?t=' + movie + '&y=&plot=short&apikey=trilogy').then(
         function(response){
             
+            // Variable for ratings array 
             var ratings = response.data.Ratings;
+
+            // For loop to extract the Rotten Tomatoes score
             for (i in ratings){
                 
                 if(ratings[i].Source === 'Rotten Tomatoes'){
