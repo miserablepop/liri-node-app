@@ -110,7 +110,8 @@ var movieThis = function(movie){
     var movie = encodeURI(movie);
     axios.get('https://www.omdbapi.com/?t=' + movie + '&y=&plot=short&apikey=trilogy').then(
         function(response){
-            console.log(response);
+            console.log('---------------------------');
+            console.log('Title: ' + response.data.Title);
 
         }).catch(function(error){
             if (error.response){
